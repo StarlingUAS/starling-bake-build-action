@@ -1,4 +1,4 @@
-name: Close Pull Request and Delete Testing Images
+name: Close Pull Request and Delete Testing Image
 
 # only trigger on pull request closed events
 on:
@@ -13,15 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: yarn
-      - name: Delete old docker image tags
-        uses: m3ntorship/action-dockerhub-cleanup@1.4
+      - name: Delete Image
+        uses: mhl787156/dockerhub-delete-tag-action@v0.1.0
         with:
-          token: ${{ secrets.DOCKERHUB_TOKEN }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          keep-last: 50
-          user: mickeyli789
-          repos: '["test-build"]'
-          substrings: '["${{github.event.pull_request.head.ref}}"]'
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          organisation: mickeyli789
+          image: test-build
+          tag: ${{github.event.pull_request.head.ref}}
+
 
