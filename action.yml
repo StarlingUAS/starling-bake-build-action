@@ -1,0 +1,112 @@
+name: 'starling-bake-build'
+description: 'performs the steps for a bake'
+inputs: 
+  bakefile:
+    description: 'Bake file path'
+    required: true
+  target: 
+    description: 'Build Target within bake file'
+    required: true
+  tag: 
+    description: 'Release tag'
+    required: true
+  dockerhub_username: 
+    description: 'Dockerhub Username'
+    required: true
+  dockerhub_password: 
+    description: 'Dockerhub Password'
+    required: true
+  build_arm64: 
+    description: 'Set to true if building for arm64'
+    required: false
+    default: false
+  latest_branch:
+    description: 'Branch name for latest, otherwise branch name is used. Used to determine release name and caching'
+    required: false
+    default: master, main
+  dev_branch:
+    description: 'Branch name for development branch. Used to determine caching'
+    required: false
+    default: dev
+   
+outputs: []
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    
+    - name: Get Release tag and cache
+      id: release_tag_cache
+      shell: bash
+      env:
+        LATEST_BRANCHES: ${{ inputs.latest_branch }}
+        DEV_BRANCHES: ${{ inputs.dev_branch }}
+      run: |
+        BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        VERSION=${BRANCH}
+        RELEASE=""
+        CACHETO=""
+        CACHEFROM="cache-dev"
+        IFS=',' read -ra branch <<< ${LATEST_BRANCHES}"
+        for b in "${branch[@]}"; do
+            echo "Is $b a match for ${BRANCH}"
+            if [[ "${BRANCH}" == $b ]]
+            then
+                VERSION=${{ inputs.tag }}
+                RELEASE='latest'
+                CACHETO='cache'
+                CACHEFROM='cache'
+                break
+            fi
+        done
+
+        IFS=',' read -ra devbranch <<< "${DEV_BRANCHES}"
+        for b in "${devbranch[@]}"; do
+            echo "Is $b a match for ${BRANCH}"
+            if [[ "${BRANCH}" == $b ]]
+            then
+                VERSION=${{ inputs.tag }}
+                RELEASE='latest'
+                CACHETO='cache-dev'
+                CACHEFROM='cache-dev'
+            fi
+        done
+
+        echo "Version: ${VERSION}, Release: ${RELEASE}, CACHETO: ${CACHETO}, CACHEFROM: ${CACHEFROM}"
+        echo ::set-output name=release::${RELEASE}
+        echo ::set-output name=version::${VERSION}
+        echo ::set-output name=cacheto::${CACHETO}
+        echo ::set-output name=cachefrom::${CACHEFROM}
+
+
+    - if: ${{ inputs.build_arm64 }}
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: arm64
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ inputs.dockerhub_username }}
+        password: ${{ inputs.dockerhub_password }}
+
+    - name: Build and push ${{ inputs.target }}
+      uses: docker/bake-action@master
+      with:
+        files: |
+          ${{ inputs.bake_file }}
+        targets: |
+          ${{ inputs.target }}
+        push: true
+      env:
+        BAKE_VERSION: ${{ steps.release_tag_cache.outputs.version }}
+        BAKE_RELEASENAME: ${{ steps.release_tag_cache.outputs.release }}
+        BAKE_CACHETO_NAME: ${{ steps.release_tag_cache.outputs.cacheto }}
+        BAKE_CACHEFROM_NAME: ${{ steps.release_tag_cache.outputs.cachefrom }}
