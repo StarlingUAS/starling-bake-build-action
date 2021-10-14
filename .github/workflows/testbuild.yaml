@@ -24,17 +24,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          RELEASE_BRANCHES: master
+          RELEASE_BRANCHES: master, main
           DEFAULT_BUMP: patch
           DEFAULT_PRERELEASE_BUMP: none
-          PRERELEASE_SUFFIX: ${{ steps.extract_branch.outputs.branch != 'master' }}
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.tag }}
-          name: Release ${{ steps.tag_version.outputs.tag }}
-          allowUpdates: true
-          prerelease: ${{ steps.tag_version.outputs.is_pre_release }}
+          PRERELEASE_SUFFIX: ${{ steps.extract_branch.outputs.branch }}
+      
 
   bake_allocator:
     runs-on: ubuntu-latest
@@ -48,5 +42,19 @@ jobs:
           tag: ${{ needs.bump_version.tag_version.outputs.tag }}
           dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  release:
+    needs:
+      - bump_version
+      - bake_allocator
+    runs-on: ubuntu-latest
+      steps:  
+        - name: Create a GitHub release
+          uses: ncipollo/release-action@v1
+          with:
+            tag: ${{ needs.bump_version.tag_version.outputs.tag }}
+            name: Release ${{ needs.bump_version.tag_version.outputs.tag }}
+            allowUpdates: true
+            prerelease: ${{ needs.bump_version.tag_version.outputs.is_pre_release }}
 
           
