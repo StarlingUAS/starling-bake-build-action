@@ -3,8 +3,7 @@ VERSION="${BRANCH}"
 RELEASE=""
 CACHETO=""
 CACHEFROM="cache-dev"
-echo "GOT HERE"
-IFS=',' read -ra branch <<< ${LATEST_BRANCHES}"
+IFS=',' read -ra branch <<< "${LATEST_BRANCHES}"
 for b in "${branch[@]}"; do
     echo "Is $b a match for ${BRANCH}"
     if [[ "${BRANCH}" == $b ]]
