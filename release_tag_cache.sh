@@ -21,7 +21,7 @@ done
 
 IFS=',' read -ra devbranch <<< "${DEV_BRANCHES}"
 for b in "${devbranch[@]}"; do
-    # echo "Is $b a match for ${BRANCH}"
+    echo "Is \"$b\" a match for ${BRANCH}"
     if [[ "${BRANCH}" == "$b" ]]
     then
         CACHETO='cache-dev'
