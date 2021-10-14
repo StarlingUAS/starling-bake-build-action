@@ -7,7 +7,7 @@ jobs:
   bump_version:
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{steps.tag_version.outputs.tag}}
+      tag: ${{steps.tag_version.outputs.new_tag}}
       is_pre_release: ${{steps.tag_version.outputs.is_pre_release}}
     steps:
       - uses: actions/checkout@v2
@@ -26,9 +26,9 @@ jobs:
           RELEASE_BRANCHES: master,main
           DEFAULT_BUMP: patch
           DEFAULT_PRERELEASE_BUMP: none
+          DRY_RUN: true # Dont push new tag here, only push on successful build
           PRERELEASE_SUFFIX: ${{ steps.extract_branch.outputs.branch }}
       
-
   bake_allocator:
     runs-on: ubuntu-latest
     needs: bump_version
