@@ -1,10 +1,6 @@
 name: 'Update images'
 
 on: [push]
-  # Triggers on push to any tag of form vX.X.X
-  # push:
-  #   tags:
-  #     - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
 
