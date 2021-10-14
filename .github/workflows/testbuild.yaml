@@ -1,0 +1,52 @@
+name: 'Update images'
+
+on: [push]
+  # Triggers on push to any tag of form vX.X.X
+  # push:
+  #   tags:
+  #     - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+
+  bump_version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '1'
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mhl787156/github-tag-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          RELEASE_BRANCHES: master
+          DEFAULT_BUMP: patch
+          DEFAULT_PRERELEASE_BUMP: none
+          PRERELEASE_SUFFIX: ${{ steps.extract_branch.outputs.branch != 'master' }}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.tag }}
+          name: Release ${{ steps.tag_version.outputs.tag }}
+          allowUpdates: true
+          prerelease: ${{ steps.tag_version.outputs.is_pre_release }}
+
+  bake_allocator:
+    runs-on: ubuntu-latest
+    needs: bump_version
+    steps:
+      - name: build
+        uses: mhl787156/starling-bake-build-action@master
+        with:
+          bakefile: ./buildtools/docker-bake.hcl
+          target: starling-allocator
+          tag: ${{ needs.bump_version.tag_version.outputs.tag }}
+          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+          

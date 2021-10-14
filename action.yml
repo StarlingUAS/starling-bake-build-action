@@ -28,8 +28,19 @@ inputs:
     description: 'Branch name for development branch. Used to determine caching'
     required: false
     default: dev
+  push:
+    description: 'Push to docker hub'
+    required: false
+    default: true
    
-outputs: []
+outputs: 
+  release:
+    description: 'Release name of the system'
+    value: ${{ steps.release_tag_cache.outputs.release }}
+  version:
+    description: 'Version name of the system'
+    value: ${{ steps.release_tag_cache.outputs.version }}
+
 runs:
   using: "composite"
   steps:
@@ -104,7 +115,7 @@ runs:
           ${{ inputs.bake_file }}
         targets: |
           ${{ inputs.target }}
-        push: true
+        push: ${{ inputs.push }}
       env:
         BAKE_VERSION: ${{ steps.release_tag_cache.outputs.version }}
         BAKE_RELEASENAME: ${{ steps.release_tag_cache.outputs.release }}
