@@ -24,6 +24,7 @@ for b in "${devbranch[@]}"; do
     echo "Is \"$b\" a match for ${BRANCH}"
     if [[ "${BRANCH}" == "$b" ]]
     then
+        VERSION='nightly'
         CACHETO='cache-dev'
         CACHEFROM='cache-dev'
         echo "Branch is dev, caches set accordingly"
