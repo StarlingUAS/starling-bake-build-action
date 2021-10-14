@@ -9,7 +9,7 @@ echo "Current branch is: ${BRANCH}"
 IFS=',' read -ra branch <<< "${LATEST_BRANCHES}"
 for b in "${branch[@]}"; do
     # echo "Is $b a match for ${BRANCH}"
-    if [[ "${BRANCH}" == $b ]]
+    if [[ "${BRANCH}" == "$b" ]]
     then
         VERSION="${TAG}"
         RELEASE='latest'
@@ -22,7 +22,7 @@ done
 IFS=',' read -ra devbranch <<< "${DEV_BRANCHES}"
 for b in "${devbranch[@]}"; do
     # echo "Is $b a match for ${BRANCH}"
-    if [[ "${BRANCH}" == $b ]]
+    if [[ "${BRANCH}" == "$b" ]]
     then
         CACHETO='cache-dev'
         CACHEFROM='cache-dev'
