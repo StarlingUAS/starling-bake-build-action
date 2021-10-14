@@ -80,7 +80,7 @@ runs:
     - name: Build and push ${{ inputs.target }}
       uses: docker/bake-action@master
       with:
-        files: ${{ inputs.bake_file }}
+        files: ${{ inputs.bakefile }}
         targets: ${{ inputs.target }}
         push: ${{ inputs.push }}
       env:
