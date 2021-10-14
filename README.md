@@ -1,6 +1,18 @@
 # starling-bake-build-action
 Github Action for building (baking) starling modules
 
+This composite action will do the following:
+1. Checkout the current project
+2. Runs a script which parses the current branch to work out 
+  - *VERSION* set to current tag (e.g. v0.1.1) if current branch is `latest_branch`, else set to the branch name
+  - *RELEASE* set to `latest` if current branch is in `latest_branch`, else not set
+  - *CACHEFROM* set to `cache` if current branch is `latest_branch` or `cache-dev` otherwise
+  - *CACHETO* set to `cache` if current branch is `latest_branch`, `cache-dev` if current branch is `dev_branch`, else and empty string 
+3. If `build_arm64` is true, qemu is started up. 
+4. Set up docker buildx
+5. Login to dockerhub
+6. Build `target` specified in `bakefile` and push if `push` is specified
+
 ## Inputs and outputs
 ```
 inputs: 
