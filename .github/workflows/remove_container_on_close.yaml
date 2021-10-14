@@ -1,0 +1,31 @@
+name: Close Pull Request
+
+# only trigger on pull request closed events
+on:
+  pull_request:
+    types: [ closed ]
+    branches:
+      - '**'
+      - '!master'
+      - '!dev'
+
+jobs:
+  remove_images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn
+      - uses: mdecoleman/pr-branch-name@1.0.1
+        id: vars
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete old docker image tags
+        uses: m3ntorship/action-dockerhub-cleanup@1.4
+        with:
+          token: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          keep-last: 50
+          user: mickeyli789
+          repos: '["test-build"]'
+          substrings: '["${{steps.vars.branch}}"]'
+
