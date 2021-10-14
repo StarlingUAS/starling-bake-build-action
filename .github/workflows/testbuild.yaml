@@ -41,7 +41,7 @@ jobs:
     needs: bump_version
     steps:
       - name: build
-        uses: mhl787156/starling-bake-build-action@master
+        uses: mhl787156/starling-bake-build-action@main
         with:
           bakefile: ./buildtools/docker-bake.hcl
           target: starling-allocator
