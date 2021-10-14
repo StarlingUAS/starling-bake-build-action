@@ -8,7 +8,7 @@ echo "Current branch is: ${BRANCH}"
 
 IFS=',' read -ra branch <<< "${LATEST_BRANCHES}"
 for b in "${branch[@]}"; do
-    # echo "Is $b a match for ${BRANCH}"
+    echo "Is \"$b\" a match for ${BRANCH}"
     if [[ "${BRANCH}" == "$b" ]]
     then
         VERSION="${TAG}"

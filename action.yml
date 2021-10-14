@@ -23,7 +23,7 @@ inputs:
   latest_branch:
     description: 'Branch name for latest, otherwise branch name is used. Used to determine release name and caching'
     required: false
-    default: master, main
+    default: master,main
   dev_branch:
     description: 'Branch name for development branch. Used to determine caching'
     required: false
