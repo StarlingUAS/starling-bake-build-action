@@ -32,8 +32,8 @@ for b in "${devbranch[@]}"; do
 done
 
 echo "Version: ${VERSION}, Release: ${RELEASE}, CACHETO: ${CACHETO}, CACHEFROM: ${CACHEFROM}"
-echo ::set-output name=release::"${VERSION}"
-echo ::set-output name=version::"${RELEASE}"
+echo ::set-output name=release::"${RELEASE}"
+echo ::set-output name=version::"${VERSION}"
 echo ::set-output name=cacheto::"${CACHETO}"
 echo ::set-output name=cachefrom::"${CACHEFROM}"
     
