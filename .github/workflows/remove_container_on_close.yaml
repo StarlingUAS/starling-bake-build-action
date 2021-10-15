@@ -1,6 +1,6 @@
 name: Close Pull Request and Delete Testing Image
 
-# only trigger on pull request closed events
+# only trigger on pull request closed events except for master and dev
 on:
   pull_request_target:
     types: [ closed ]
