@@ -4,15 +4,13 @@ name: Close Pull Request and Delete Testing Image
 on:
   pull_request:
     types: [ closed ]
-    branches:
-      - '**'
-      - '!master'
-      - '!dev'
+    branches-ignore:
+      - master
+      - dev
   delete:
-    branches:
-      - '**'
-      - '!master'
-      - '!dev'
+    branches-ignore:
+      - master
+      - dev
 
 jobs:
   remove_images:
