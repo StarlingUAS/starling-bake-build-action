@@ -50,8 +50,7 @@ jobs:
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         if: |
-          !failure() && !cancelled() && 
-          success('bake_allocator') &&
+          !failure() && !cancelled() && success() &&
           needs.bump_version.outputs.is_release == 'true'
         with:
           tag: ${{ needs.bump_version.outputs.tag }}
