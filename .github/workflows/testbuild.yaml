@@ -49,11 +49,13 @@ jobs:
     steps:  
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
-        if: ${{ needs.bump_version.outputs.release }}
+        if: |
+          !failure() && !cancelled() && 
+          success('bake_allocator') &&
+          needs.bump_version.outputs.is_release == 'true'
         with:
           tag: ${{ needs.bump_version.outputs.tag }}
           name: Release ${{ needs.bump_version.outputs.tag }}
           allowUpdates: true
-          # prerelease: ${{ needs.bump_version.outputs.is_pre_release }}
 
           
