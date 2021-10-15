@@ -2,7 +2,7 @@ name: Close Pull Request and Delete Testing Image
 
 # only trigger on pull request closed events
 on:
-  pull_request:
+  pull_request_target:
     types: [ closed ]
     branches-ignore:
       - master
