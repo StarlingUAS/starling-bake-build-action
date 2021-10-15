@@ -12,7 +12,7 @@ This composite action will do the following:
 4. Set up docker buildx
 5. Login to dockerhub
 6. Build `target` specified in `bakefile` and push if `push` is specified
-
+ 
 ## Inputs and outputs
 ```
 inputs: 
