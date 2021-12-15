@@ -10,6 +10,10 @@ inputs:
   tag: 
     description: 'Release tag'
     required: true
+  login:
+    description: 'Perform Login to docker hub'
+    required: false
+    default: true
   dockerhub_username: 
     description: 'Dockerhub Username'
     required: true
@@ -32,6 +36,10 @@ inputs:
     description: 'Push to docker hub'
     required: false
     default: true
+  load:
+    description: 'Load from local repository'
+    required: false
+    default: false
    
 outputs: 
   release:
@@ -81,6 +89,7 @@ runs:
 
     - name: Login to DockerHub
       uses: docker/login-action@v1
+      if: ${{ inputs.login }}
       with:
         username: ${{ inputs.dockerhub_username }}
         password: ${{ inputs.dockerhub_password }}
@@ -91,6 +100,7 @@ runs:
         files: ${{ inputs.bakefile }}
         targets: ${{ inputs.target }}
         push: ${{ inputs.push }}
+        load: ${{ inputs.load }}
       env:
         BAKE_VERSION: ${{ steps.release_tag_cache.outputs.version }}
         BAKE_RELEASENAME: ${{ steps.release_tag_cache.outputs.release }}
