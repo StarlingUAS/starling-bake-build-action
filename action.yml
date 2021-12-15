@@ -102,7 +102,7 @@ runs:
         targets: ${{ inputs.target }}
         push: false
         load: true
-        set: "platform=linux/amd64"
+        set: "${{ inputs.target }}.platform=linux/amd64"
       env:
         BAKE_VERSION: ${{ steps.release_tag_cache.outputs.version }}
         BAKE_RELEASENAME: ${{ steps.release_tag_cache.outputs.release }}
