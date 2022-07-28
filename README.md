@@ -25,11 +25,19 @@ inputs:
   tag: 
     description: 'Release tag'
     required: true
-  dockerhub_username: 
-    description: 'Dockerhub Username'
+  login:
+    description: 'Perform Login to registry'
+    required: false
+    default: true
+  registry:
+    description: 'Registry to login to'
+    required: false
+    default: docker.io
+  registry_username: 
+    description: 'Registry Username'
     required: true
-  dockerhub_password: 
-    description: 'Dockerhub Password'
+  registry_password: 
+    description: 'Registry Password'
     required: true
   build_arm64: 
     description: 'Set to true if building for arm64'
@@ -47,6 +55,14 @@ inputs:
     description: 'Push to docker hub'
     required: false
     default: true
+  load:
+    description: 'Load from local repository'
+    required: false
+    default: false
+  prefix:
+    description: 'Prefix to use for images'
+    required: false
+    default: uobflightlabstarling
    
 outputs: 
   release:

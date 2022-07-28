@@ -11,7 +11,7 @@ inputs:
     description: 'Release tag'
     required: true
   login:
-    description: 'Perform Login to docker hub'
+    description: 'Perform Login to registry'
     required: false
     default: true
   registry:
