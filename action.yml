@@ -48,6 +48,10 @@ inputs:
     description: 'Prefix to use for images'
     required: false
     default: uobflightlabstarling
+  skip_setup:
+    description: 'Skip the setup tests for post-test run'
+    required: false
+    default: false
    
 outputs: 
   release:
@@ -61,6 +65,7 @@ runs:
   using: "composite"
   steps:
     - name: Checkout
+      if: ${{ inputs.skip_setup == 'false' }}
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
@@ -76,6 +81,7 @@ runs:
 
     # See https://github.com/actions/runner/issues/834#issuecomment-923177855
     - uses: ChristopherHX/conditional@b4a9649204f81002ec9a4ef7d4bf7d6b2ab7fa55
+      if: ${{ inputs.skip_setup == 'false' }}
       with:
         if: ${{ inputs.build_arm64 == 'true' }}
         step: |
@@ -86,6 +92,7 @@ runs:
     
     # See https://github.com/actions/runner/issues/834#issuecomment-923177855
     - uses: ChristopherHX/conditional@b4a9649204f81002ec9a4ef7d4bf7d6b2ab7fa55
+      if: ${{ inputs.skip_setup == 'false' }}
       with:
         if: ${{ inputs.build_arm64 == 'false' }}
         step: |
@@ -93,6 +100,7 @@ runs:
           uses: docker/setup-qemu-action@v1
 
     - name: Set up Docker Buildx
+      if: ${{ inputs.skip_setup == 'false' }}
       uses: docker/setup-buildx-action@v1
 
     - name: Login to Registry

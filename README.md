@@ -63,6 +63,10 @@ inputs:
     description: 'Prefix to use for images'
     required: false
     default: uobflightlabstarling
+  skip_setup:
+    description: 'Skip the setup tests for post-test run'
+    required: false
+    default: false
    
 outputs: 
   release:
