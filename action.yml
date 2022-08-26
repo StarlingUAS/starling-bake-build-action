@@ -123,7 +123,7 @@ runs:
       env:
         BAKE_VERSION: ${{ steps.release_tag_cache.outputs.version }}
         BAKE_RELEASENAME: ${{ steps.release_tag_cache.outputs.release }}
-        BAKE_CACHETO_NAME: ${{ inputs.skip_setup =='true' && steps.release_tag_cache.outputs.cacheto || "" }}
+        BAKE_CACHETO_NAME: ${{ inputs.skip_setup =='true' && steps.release_tag_cache.outputs.cacheto || '' }}
         BAKE_CACHEFROM_NAME: ${{ steps.release_tag_cache.outputs.cachefrom }}
         BAKE_REGISTRY: ${{ inputs.registry }}/
         BAKE_CACHETO_REGISTRY: ${{ inputs.registry }}/
@@ -140,7 +140,7 @@ runs:
       env:
         BAKE_VERSION: ${{ steps.release_tag_cache.outputs.version }}
         BAKE_RELEASENAME: ${{ steps.release_tag_cache.outputs.release }}
-        BAKE_CACHETO_NAME: ${{ inputs.skip_setup == 'true' && steps.release_tag_cache.outputs.cacheto || "" }}
+        BAKE_CACHETO_NAME: ${{ inputs.skip_setup == 'true' && steps.release_tag_cache.outputs.cacheto || '' }}
         BAKE_CACHEFROM_NAME: ${{ steps.release_tag_cache.outputs.cachefrom }}
         BAKE_REGISTRY: ${{ inputs.registry }}/
         BAKE_CACHETO_REGISTRY: ${{ inputs.registry }}/
